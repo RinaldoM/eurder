@@ -46,4 +46,13 @@ public class ItemService {
             throw new InvalidNumberInputException(" for price!");
         }
     }
+
+    public Item findItemById(String itemId){
+        return itemRepository.findById(itemId);
+    }
+
+    public void removeFromStock(Item itemToUpdate, int amount){
+        Item item = itemRepository.findById(itemToUpdate.getItemId());
+        item.removeFromStock(amount);
+    }
 }
