@@ -22,26 +22,28 @@ public class ItemService {
         this.itemMapper = itemMapper;
     }
 
-    public ItemDto savenewItem(CreateItemDto createItemDto) {
-        if(createItemDto.getName().isEmpty()){
-            serviceLogger.error("Item name is Empty");
-            throw new EmptyInputException("Item name");
-        }
-        if(createItemDto.getDescription().isEmpty()){
-            serviceLogger.error("Item description is Empty");
-            throw new EmptyInputException("Item description");
-        }
-        if(createItemDto.getPrice()<=0){
-            serviceLogger.error("Invalid item price!");
-            throw new InvalidNumberInputException(" for price!");
-        }
-        if(createItemDto.getAmount()<=0){
-            serviceLogger.error("Invalid amount!");
-            throw new InvalidNumberInputException(" for amount!");
-        }
+    public ItemDto saveNewItem(CreateItemDto createItemDto) {
+        loggingErrorEmptyInput(createItemDto.getName(), "name");
+        loggingErrorEmptyInput(createItemDto.getDescription(), "description");
+        loggingErrorInvalidInput(createItemDto.getPrice(),"price");
+        loggingErrorInvalidInput(createItemDto.getAmount(),"amount");
 
         Item item = itemMapper.toItem(createItemDto);
         itemRepository.save(item);
         return itemMapper.toDto(item);
+    }
+
+    private void loggingErrorEmptyInput(String input, String fieldName) {
+        if (input.isEmpty()) {
+            serviceLogger.error("Item " + fieldName + " is empty!");
+            throw new EmptyInputException(fieldName);
+        }
+    }
+
+    private void loggingErrorInvalidInput(double input, String fieldName){
+        if (input <= 0) {
+            serviceLogger.error("Invalid item "+fieldName+"!");
+            throw new InvalidNumberInputException(" for price!");
+        }
     }
 }

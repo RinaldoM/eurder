@@ -25,37 +25,36 @@ public class CustomerService {
     }
 
     public CustomerDto createNewCustomer(CreateCustomerDto createCustomerDto) {
-        if(createCustomerDto.getFirstName().isEmpty()){
-            serviceLogger.error("First name is missing!");
-            throw new EmptyInputException("First name");
-        }
-        if(createCustomerDto.getLastName().isEmpty()){
-            serviceLogger.error("last name is missing!");
-            throw new EmptyInputException("Last name");
-        }
-        if(createCustomerDto.getEmail().isEmpty()){
-            serviceLogger.error("Email is missing!");
-            throw new EmptyInputException("Email");
-
-        }
-        if(!isEmailFormValid(createCustomerDto.getEmail())){
+        loggingError(createCustomerDto.getFirstName(), "First name");
+        loggingError(createCustomerDto.getLastName(), "Last name");
+        loggingError(createCustomerDto.getAddress(), "Address");
+        loggingError(createCustomerDto.getPhoneNumber(), "Phone number");
+        if (!isEmailFormValid(createCustomerDto.getEmail())) {
             serviceLogger.error("Email is invalid!");
             throw new EmailInvalidException();
-        }
-        if(createCustomerDto.getAddress().isEmpty()){
-            serviceLogger.error("Address is missing!");
-            throw new EmptyInputException("Address");
-        }
-        if(createCustomerDto.getPhoneNumber().isEmpty()){
-            serviceLogger.error("Phone number is missing!");
-            throw new EmptyInputException("Phone Number");
-
         }
         Customer customer = customerMapper.toCustomer(createCustomerDto);
         customerRepository.save(customer);
         return customerMapper.toCustomerDto(customer);
     }
 
+    public List<CustomerDto> getAllCustomers() {
+        serviceLogger.info("All customers are shown.");
+        return customerMapper.toCustomerDto(customerRepository.getAll());
+    }
+
+    public CustomerDto getCustomerById(String customerId) {
+        serviceLogger.info("Customer with ID " + customerId + " is shown.");
+        return customerMapper.toCustomerDto(customerRepository.findById(customerId));
+    }
+
+    private void loggingError(String input, String fieldName) {
+        if (input.isEmpty()) {
+            serviceLogger.error(fieldName + " is missing!");
+            throw new EmptyInputException(fieldName);
+        }
+    }
+    //source: https://stackoverflow.com/questions/201323/how-can-i-validate-an-email-address-using-a-regular-expression
     private boolean isEmailFormValid(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
@@ -69,13 +68,4 @@ public class CustomerService {
         return pat.matcher(email).matches();
     }
 
-    public List<CustomerDto> getAllCustomers() {
-        serviceLogger.info("All customers are shown.");
-        return customerMapper.toCustomerDto(customerRepository.getAll());
-    }
-
-    public CustomerDto getCustomerById(String customerId) {
-        serviceLogger.info("Customer with ID " + customerId+ " is shown." );
-        return customerMapper.toCustomerDto(customerRepository.findById(customerId));
-    }
 }

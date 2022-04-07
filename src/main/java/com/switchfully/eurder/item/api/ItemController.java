@@ -18,6 +18,6 @@ public class ItemController {
     @PostMapping(produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDto createNewItem(@RequestBody CreateItemDto createItemDto){
-        return itemService.savenewItem(createItemDto);
+        return itemService.saveNewItem(createItemDto);
     }
 }
