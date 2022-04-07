@@ -1,5 +1,7 @@
 package com.switchfully.eurder.customer.api.dto;
 
+import java.util.Objects;
+
 public class CustomerDto {
     private final String customerId;
     private final String firstName;
@@ -39,5 +41,18 @@ public class CustomerDto {
 
     public String getAddress() {
         return address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomerDto that = (CustomerDto) o;
+        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(address, that.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, email, phoneNumber, address);
     }
 }

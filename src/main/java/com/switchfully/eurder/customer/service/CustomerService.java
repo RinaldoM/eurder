@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
@@ -66,5 +67,15 @@ public class CustomerService {
             return false;
         }
         return pat.matcher(email).matches();
+    }
+
+    public List<CustomerDto> getAllCustomers() {
+        serviceLogger.info("All customers are shown.");
+        return customerMapper.toCustomerDto(customerRepository.getAll());
+    }
+
+    public CustomerDto getCustomerById(String customerId) {
+        serviceLogger.info("Customer with ID " + customerId+ " is shown." );
+        return customerMapper.toCustomerDto(customerRepository.findById(customerId));
     }
 }
