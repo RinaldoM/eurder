@@ -6,6 +6,7 @@ import com.switchfully.eurder.item.service.ItemService;
 import com.switchfully.eurder.order.domain.GroupItem;
 import com.switchfully.eurder.order.domain.Order;
 import com.switchfully.eurder.order.domain.OrderRepository;
+import com.switchfully.eurder.order.exception.CustomerNotFoundException;
 import com.switchfully.eurder.order.exception.EmptyInputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private CustomerService customerService;
 
     public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
@@ -30,12 +33,12 @@ public class OrderService {
 
     public Order saveNewOrder(Order order) {
 
-
+        loggingError(order.getItemGroup(),"GroupItemList");
+        loggingError(order.getCustomer(), "customer");
         order.setTotalPrice(calculateTotalPrice(order));
+        customerService.getCustomerById(order.getCustomer());
         calculateShippingDate(order);
         editStockOfItem(order);
-
-
 
         orderRepository.save(order);
         return order;
@@ -77,6 +80,7 @@ public class OrderService {
             throw new EmptyInputException(fieldName);
         }
     }
+
     private void loggingError(List<GroupItem> input, String fieldName) {
         if (input.isEmpty()) {
             serviceLogger.error(fieldName + " is empty!");

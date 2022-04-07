@@ -1,8 +1,6 @@
 package com.switchfully.eurder.item.domain;
 
-import com.switchfully.eurder.customer.domain.Customer;
-import com.switchfully.eurder.customer.domain.CustomerRepository;
-import com.switchfully.eurder.customer.exception.NotFoundException;
+import com.switchfully.eurder.customer.exception.CustomerNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -29,7 +27,7 @@ public class ItemRepository {
         Item foundItem = itemsById.get(itemId);
         if (foundItem == null) {
             repositoryLogger.error("Customer with customer ID " + itemId + " not found");
-            throw new NotFoundException(itemId);
+            throw new CustomerNotFoundException(itemId);
         }
         return foundItem;
     }

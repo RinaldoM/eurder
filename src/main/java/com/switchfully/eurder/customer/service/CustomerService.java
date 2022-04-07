@@ -44,7 +44,6 @@ public class CustomerService {
     }
 
     public CustomerDto getCustomerById(String customerId) {
-        serviceLogger.info("Customer with ID " + customerId + " is shown.");
         return customerMapper.toCustomerDto(customerRepository.findById(customerId));
     }
 
@@ -53,6 +52,9 @@ public class CustomerService {
             serviceLogger.error(fieldName + " is missing!");
             throw new EmptyInputException(fieldName);
         }
+    }
+    public boolean checkIfCustomerExists(String customerId){
+        return customerRepository.checkIfCustomerExist(customerId);
     }
     //source: https://stackoverflow.com/questions/201323/how-can-i-validate-an-email-address-using-a-regular-expression
     private boolean isEmailFormValid(String email) {

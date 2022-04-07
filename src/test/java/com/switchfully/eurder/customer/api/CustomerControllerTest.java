@@ -278,7 +278,6 @@ class CustomerControllerTest {
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .extract()
                     .response();
-
         }
 
 

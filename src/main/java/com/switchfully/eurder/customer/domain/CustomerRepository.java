@@ -1,11 +1,9 @@
 package com.switchfully.eurder.customer.domain;
 
-import com.switchfully.eurder.customer.exception.NotFoundException;
+import com.switchfully.eurder.customer.exception.CustomerNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,8 +31,12 @@ public class CustomerRepository {
         Customer foundCustomer = customersById.get(customerId);
         if (foundCustomer == null) {
             repositoryLogger.error("Customer with customer ID " + customerId + " not found");
-            throw new NotFoundException(customerId);
+            throw new CustomerNotFoundException(customerId);
         }
         return foundCustomer;
+    }
+
+    public boolean checkIfCustomerExist(String customerId) {
+        return customersById.get(customerId) != null;
     }
 }
