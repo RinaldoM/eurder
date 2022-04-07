@@ -45,12 +45,4 @@ public class GroupItem {
         return Objects.hash(itemId, amount, shippingDate);
     }
 
-    @Override
-    public String toString() {
-        return "GroupItem{" +
-                "itemId='" + itemId + '\'' +
-                ", amount=" + amount +
-                ", shippingDate=" + shippingDate +
-                '}';
-    }
 }

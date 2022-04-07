@@ -9,10 +9,10 @@ import java.util.UUID;
 public class Order {
     private final String orderId;
     private final List<GroupItem> itemGroup;
-    private final Customer customer;
+    private final String customer;
     private double totalPrice;
 
-    public Order(Customer customer, List<GroupItem> itemGroup) {
+    public Order(String customer, List<GroupItem> itemGroup) {
         this.orderId = UUID.randomUUID().toString();
         this.itemGroup = itemGroup;
         this.customer = customer;
@@ -27,7 +27,7 @@ public class Order {
         return itemGroup;
     }
 
-    public Customer getCustomer() {
+    public String getCustomer() {
         return customer;
     }
 
@@ -52,13 +52,4 @@ public class Order {
         return Objects.hash(itemGroup, customer, totalPrice);
     }
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "orderId='" + orderId + '\'' +
-                ", itemGroup=" + itemGroup +
-                ", customer=" + customer +
-                ", totalPrice=" + totalPrice +
-                '}';
-    }
 }

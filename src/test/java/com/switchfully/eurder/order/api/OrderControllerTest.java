@@ -7,6 +7,7 @@ import com.switchfully.eurder.item.domain.ItemRepository;
 import com.switchfully.eurder.order.domain.GroupItem;
 import com.switchfully.eurder.order.domain.Order;
 import com.switchfully.eurder.order.domain.OrderRepository;
+import com.switchfully.eurder.order.service.OrderService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.assertj.core.api.Assertions;
@@ -34,6 +35,8 @@ class OrderControllerTest {
     private ItemRepository itemRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private OrderService orderService;
 
     @Nested
     class CreateOrderTest {
@@ -44,7 +47,7 @@ class OrderControllerTest {
                     new Item("banana", "tasty banana", 2, 1),
                     new Item("orange", "juicy orange", 1, 100)
             );
-            fruitItems.forEach(fruitItem ->itemRepository.save(fruitItem));
+            fruitItems.forEach(fruitItem -> itemRepository.save(fruitItem));
 
             Customer newCustomer = new Customer("Axel", "Rose", "axel_rose@gnr.com", "089386666", "Paradise City 5");
             customerRepository.save(newCustomer);
@@ -54,7 +57,7 @@ class OrderControllerTest {
                     new GroupItem(fruitItems.get(1).getItemId(), 20)
             );
 
-            Order order = new Order(newCustomer, groupItems);
+            Order order = new Order(newCustomer.getCustomerId(), groupItems);
             orderRepository.save(order);
 
             //  WHEN
@@ -78,7 +81,85 @@ class OrderControllerTest {
             Assertions.assertThat(expectedOrder.getTotalPrice()).isEqualTo(actualOrder.getTotalPrice());
             Assertions.assertThat(expectedOrder.getItemGroup()).hasSameElementsAs(actualOrder.getItemGroup());
             System.out.println(expectedOrder);
+        }
 
+        @Test
+        void givenOrderInStock_WhenRegisterOrder_ThenReturnShippingDatePlus1() {
+            //  GIVEN
+            List<Item> fruitItems = List.of(
+                    new Item("banana", "tasty banana", 2, 1),
+                    new Item("orange", "juicy orange", 1, 100)
+            );
+            fruitItems.forEach(fruitItem -> itemRepository.save(fruitItem));
+
+            Customer newCustomer = new Customer("Axel", "Rose", "axel_rose@gnr.com", "089386666", "Paradise City 5");
+            customerRepository.save(newCustomer);
+
+            List<GroupItem> groupItems = List.of(
+                    new GroupItem(fruitItems.get(1).getItemId(), 20)
+            );
+
+            //  WHEN
+            Order order = new Order(newCustomer.getCustomerId(), groupItems);
+            orderService.saveNewOrder(order);
+            //  THEN
+            Order expectedOrder = orderRepository.findById(order.getOrderId());
+
+            Assertions.assertThat(expectedOrder.getItemGroup().get(0).getShippingDate()).isEqualTo(LocalDate.now().plusDays(1));
+        }
+
+        @Test
+        void givenOrderNotInStock_WhenRegisterOrder_ThenReturnShippingDatePlus8() {
+            //  GIVEN
+            List<Item> fruitItems = List.of(
+                    new Item("banana", "tasty banana", 2, 1),
+                    new Item("orange", "juicy orange", 1, 100)
+            );
+            fruitItems.forEach(fruitItem -> itemRepository.save(fruitItem));
+
+            Customer newCustomer = new Customer("Axel", "Rose", "axel_rose@gnr.com", "089386666", "Paradise City 5");
+            customerRepository.save(newCustomer);
+
+            List<GroupItem> groupItems = List.of(
+                    new GroupItem(fruitItems.get(0).getItemId(), 20)
+            );
+
+
+            //  WHEN
+            Order order = new Order(newCustomer.getCustomerId(), groupItems);
+            orderService.saveNewOrder(order);
+            //  THEN
+            Order expectedOrder = orderRepository.findById(order.getOrderId());
+
+            Assertions.assertThat(expectedOrder.getItemGroup().get(0).getShippingDate()).isEqualTo(LocalDate.now().plusDays(7));
+        }
+
+        @Test
+        void givenOrder_WhenRegisterOrder_ThenReturnTotalPrice() {
+            //  GIVEN
+            List<Item> fruitItems = List.of(
+                    new Item("banana", "tasty banana", 2, 1),
+                    new Item("orange", "juicy orange", 1, 100)
+            );
+            fruitItems.forEach(fruitItem -> itemRepository.save(fruitItem));
+
+            Customer newCustomer = new Customer("Axel", "Rose", "axel_rose@gnr.com", "089386666", "Paradise City 5");
+            customerRepository.save(newCustomer);
+
+            List<GroupItem> groupItems = List.of(
+                    new GroupItem(fruitItems.get(0).getItemId(), 20),
+                    new GroupItem(fruitItems.get(1).getItemId(), 10)
+
+            );
+
+
+            //  WHEN
+            Order order = new Order(newCustomer.getCustomerId(), groupItems);
+            orderService.saveNewOrder(order);
+            //  THEN
+            Order expectedOrder = orderRepository.findById(order.getOrderId());
+
+            Assertions.assertThat(expectedOrder.getTotalPrice()).isEqualTo(50);
         }
 
     }
