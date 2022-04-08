@@ -42,6 +42,7 @@ public class Item {
         this.amount -= amount;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
