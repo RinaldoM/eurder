@@ -65,6 +65,31 @@ class ItemControllerTest {
     }
 
     @Test
+    void givenNewItem_WhenRegisterItemAnUnauthorizedUser_ThenReturnErrorMessage() {
+        //  GIVEN
+        CreateItemDto newItem = new CreateItemDto("iPhone 12", "Not the newest iPhone", 700, 2);
+        Customer slash = new Customer("Slash", "No Idea", "slash@gnr.com", "089386666", "Garden of Eden");
+        userRepository.addNewCustomer(slash);
+        //  WHEN
+        RestAssured
+                .given()
+                .auth()
+                .preemptive()
+                .basic("Slash", "pwd")
+                .port(port)
+                .body(newItem)
+                .contentType(ContentType.JSON)
+                .when()
+                .accept(ContentType.JSON)
+                .post("/items")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract()
+                .response();
+    }
+
+    @Test
     void givenItemEmptyName_WhenAddedNewItem_ThenReturnErrorMessage() {
         //  GIVEN
         CreateItemDto newItem = new CreateItemDto("", "Not the newest iPhone", 700, 2);
@@ -87,6 +112,7 @@ class ItemControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().response();
     }
+
     @Test
     void givenItemEmptyDescription_WhenAddedNewItem_ThenReturnErrorMessage() {
         //  GIVEN
@@ -110,10 +136,11 @@ class ItemControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().response();
     }
+
     @Test
     void givenItemInvalidPrice_WhenAddedNewItem_ThenReturnErrorMessage() {
         //  GIVEN
-        CreateItemDto newItem = new CreateItemDto("iPhone12", "Not the newest iPhone",-7, 2);
+        CreateItemDto newItem = new CreateItemDto("iPhone12", "Not the newest iPhone", -7, 2);
         Customer slash = new Customer("Slash", "No Idea", "slash@gnr.com", "089386666", "Garden of Eden");
         userRepository.addNewAdmin(slash);
         //  WHEN
@@ -133,6 +160,7 @@ class ItemControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().response();
     }
+
     @Test
     void givenItemInvalidAmount_WhenAddedNewItem_ThenReturnErrorMessage() {
         //  GIVEN
@@ -156,7 +184,6 @@ class ItemControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().response();
     }
-
 
 
 }

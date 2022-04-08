@@ -25,15 +25,15 @@ public class SecurityService {
         User user = userRepository.getUser(usernamePassword.getUsername());
         if(user == null) {
             logger.error("Unknown user" + usernamePassword.getUsername());
-            throw new UnknownUserException();
+            throw new UnknownUserException(usernamePassword.getUsername());
         }
         if(!user.doesPasswordMatch(usernamePassword.getPassword())) {
             logger.error("Password does not match for user " + usernamePassword.getUsername());
-            throw new WrongPasswordException();
+            throw new WrongPasswordException(usernamePassword.getUsername());
         }
         if(!user.canHaveAccessTo(feature)) {
-            logger.error("User " + usernamePassword.getUsername() + " does not have access to " + feature);
-            throw new UnauthorizatedException();
+            logger.error("User " + usernamePassword.getUsername() + " does not have access to feature " + feature);
+            throw new UnauthorizatedException(usernamePassword.getUsername(), feature.toString());
         }
         logger.info("Welcome " + usernamePassword.getUsername());
     }

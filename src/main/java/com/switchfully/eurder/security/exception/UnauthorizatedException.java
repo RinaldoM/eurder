@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class UnauthorizatedException extends RuntimeException {
-    public UnauthorizatedException() {
-        super("You are not authorized to reach this endpoint!");
+    public UnauthorizatedException(String userName, String feature) {
+        super("User " + userName + " does not have access to " + feature);
     }
 }

@@ -307,6 +307,58 @@ class CustomerControllerTest {
                     .extract()
                     .response();
         }
+        @Test
+        void givenNonAuthorizedUser_whenOneCustomerAsked_showErrorMessage() {
+            //  GIVEN
+            Customer customer = new Customer("Jimi", "Hendrix", "jimi.hendrix@voodoochild.com", "089386446", "Heaven");
+            customerRepository.save(customer);
+            userRepository.addNewCustomer(customer);
+
+            //  WHEN
+            RestAssured
+                    .given()
+                    .auth()
+                    .preemptive()
+                    .basic("Jimi", "pwd")
+                    .port(port)
+                    .body(customer)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .accept(ContentType.JSON)
+                    .get("/customers/" + customer.getCustomerId())
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract()
+                    .response();
+
+        }
+        @Test
+        void givenNonAuthorizedUser_whenAllCustomerAsked_showErrorMessage() {
+            //  GIVEN
+            Customer customer = new Customer("Jimi", "Hendrix", "jimi.hendrix@voodoochild.com", "089386446", "Heaven");
+            customerRepository.save(customer);
+            userRepository.addNewCustomer(customer);
+
+            //  WHEN
+            RestAssured
+                    .given()
+                    .auth()
+                    .preemptive()
+                    .basic("Jimi", "pwd")
+                    .port(port)
+                    .body(customer)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .accept(ContentType.JSON)
+                    .get("/customers/")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract()
+                    .response();
+
+        }
 
 
     }
