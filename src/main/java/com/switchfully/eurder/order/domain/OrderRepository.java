@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,10 @@ public class OrderRepository {
 
     public Order findById(String orderId){
         return ordersById.get(orderId);
+    }
+
+    public Collection<Order> getAllOrders(){
+        return ordersById.values();
     }
 
 

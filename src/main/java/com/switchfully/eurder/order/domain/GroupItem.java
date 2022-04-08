@@ -9,11 +9,13 @@ public class GroupItem {
     private final String itemId;
     private final int amount;
     private LocalDate shippingDate;
+    private double pricePerGroup;
 
     public GroupItem(String itemId, int amount) {
         this.itemId = itemId;
         this.amount = amount;
         this.shippingDate = LocalDate.now();
+        this.pricePerGroup = 0;
     }
 
     public String getItemId() {
@@ -32,6 +34,14 @@ public class GroupItem {
         this.shippingDate = calculatedShippingDate;
     }
 
+    public double getPricePerGroup() {
+        return pricePerGroup;
+    }
+
+    public void setPricePerGroup(double pricePerGroup) {
+        this.pricePerGroup = pricePerGroup;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,5 +54,6 @@ public class GroupItem {
     public int hashCode() {
         return Objects.hash(itemId, amount, shippingDate);
     }
+
 
 }

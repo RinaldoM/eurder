@@ -1,7 +1,5 @@
 package com.switchfully.eurder.order.domain;
 
-import com.switchfully.eurder.customer.domain.Customer;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -9,13 +7,13 @@ import java.util.UUID;
 public class Order {
     private final String orderId;
     private final List<GroupItem> itemGroup;
-    private final String customer;
+    private final String customerId;
     private double totalPrice;
 
-    public Order(String customer, List<GroupItem> itemGroup) {
+    public Order(String customerId, List<GroupItem> itemGroup) {
         this.orderId = UUID.randomUUID().toString();
         this.itemGroup = itemGroup;
-        this.customer = customer;
+        this.customerId = customerId;
         this.totalPrice = 1;
     }
 
@@ -27,8 +25,8 @@ public class Order {
         return itemGroup;
     }
 
-    public String getCustomer() {
-        return customer;
+    public String getCustomerId() {
+        return customerId;
     }
 
     public double getTotalPrice() {
@@ -44,12 +42,14 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Double.compare(order.totalPrice, totalPrice) == 0 && Objects.equals(itemGroup, order.itemGroup) && Objects.equals(customer, order.customer);
+        return Double.compare(order.totalPrice, totalPrice) == 0 && Objects.equals(itemGroup, order.itemGroup) && Objects.equals(customerId, order.customerId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemGroup, customer, totalPrice);
+        return Objects.hash(itemGroup, customerId, totalPrice);
     }
+
+
 
 }

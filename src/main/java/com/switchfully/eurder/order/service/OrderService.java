@@ -1,10 +1,14 @@
 package com.switchfully.eurder.order.service;
 
+import com.switchfully.eurder.customer.exception.CustomerNotFoundException;
 import com.switchfully.eurder.customer.service.CustomerService;
 import com.switchfully.eurder.item.domain.Item;
 import com.switchfully.eurder.item.service.ItemService;
+import com.switchfully.eurder.order.api.dto.CreateGroupItemDto;
+import com.switchfully.eurder.order.api.dto.CreateOrderDto;
 import com.switchfully.eurder.order.domain.GroupItem;
 import com.switchfully.eurder.order.domain.Order;
+import com.switchfully.eurder.order.domain.OrderReport;
 import com.switchfully.eurder.order.domain.OrderRepository;
 import com.switchfully.eurder.order.exception.EmptyInputException;
 import org.slf4j.Logger;
@@ -25,17 +29,21 @@ public class OrderService {
     private ItemService itemService;
     @Autowired
     private CustomerService customerService;
+    private final OrderMapper orderMapper;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
     }
 
-    public Order saveNewOrder(Order order) {
+    public Order saveNewOrder(CreateOrderDto createOrderDTO) {
 
-        loggingError(order.getItemGroup(),"GroupItemList");
-        loggingError(order.getCustomer(), "customer");
+        loggingError(createOrderDTO.getItemGroup());
+        loggingError(createOrderDTO.getCustomerId());
+        Order order = orderMapper.toOrder(createOrderDTO);
+
         order.setTotalPrice(calculateTotalPrice(order));
-        customerService.getCustomerById(order.getCustomer());
+        customerService.getCustomerById(order.getCustomerId());
         calculateShippingDate(order);
         editStockOfItem(order);
 
@@ -73,18 +81,30 @@ public class OrderService {
         }
     }
 
-    private void loggingError(String input, String fieldName) {
+    private void loggingError(String input) {
         if (input.isEmpty()) {
-            serviceLogger.error(fieldName + " is empty!");
-            throw new EmptyInputException(fieldName);
+            serviceLogger.error("customer" + " is empty!");
+            throw new EmptyInputException("customer");
         }
     }
 
-    private void loggingError(List<GroupItem> input, String fieldName) {
+    private void loggingError(List<CreateGroupItemDto> input) {
         if (input.isEmpty()) {
-            serviceLogger.error(fieldName + " is empty!");
-            throw new EmptyInputException(fieldName);
+            serviceLogger.error("GroupItemList" + " is empty!");
+            throw new EmptyInputException("GroupItemList");
         }
     }
 
+    public OrderReport getOrderReport(String customerId) {
+        if(!customerService.checkIfCustomerExists(customerId)){
+            serviceLogger.error("Customer with customer ID " + customerId + " not found");
+            throw new CustomerNotFoundException(customerId);
+        }
+        List<Order> orderList =
+                orderRepository.getAllOrders().stream()
+                        .filter(order -> order.getCustomerId().equals(customerId)).toList();
+        double totalPrice =orderList.stream().mapToDouble(Order::getTotalPrice).sum();
+
+        return new OrderReport(orderMapper.toOrderDto(orderList),totalPrice);
+    }
 }
