@@ -360,6 +360,59 @@ class CustomerControllerTest {
 
         }
 
+        @Test
+        void givenWrongPassWordOfUser_whenAllCustomerAsked_showErrorMessage() {
+            //  GIVEN
+            Customer customer = new Customer("Jimi", "Hendrix", "jimi.hendrix@voodoochild.com", "089386446", "Heaven");
+            customerRepository.save(customer);
+            userRepository.addNewAdmin(customer);
+
+            //  WHEN
+            RestAssured
+                    .given()
+                    .auth()
+                    .preemptive()
+                    .basic("Jimi", "password")
+                    .port(port)
+                    .body(customer)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .accept(ContentType.JSON)
+                    .get("/customers/")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract()
+                    .response();
+
+        }
+        @Test
+        void givenWrongUserNameOfUser_whenAllCustomerAsked_showErrorMessage() {
+            //  GIVEN
+            Customer customer = new Customer("Jimi", "Hendrix", "jimi.hendrix@voodoochild.com", "089386446", "Heaven");
+            customerRepository.save(customer);
+            userRepository.addNewAdmin(customer);
+
+            //  WHEN
+            RestAssured
+                    .given()
+                    .auth()
+                    .preemptive()
+                    .basic("Jimy", "pwd")
+                    .port(port)
+                    .body(customer)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .accept(ContentType.JSON)
+                    .get("/customers/")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract()
+                    .response();
+
+        }
+
 
     }
 
