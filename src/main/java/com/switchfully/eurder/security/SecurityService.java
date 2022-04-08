@@ -1,6 +1,7 @@
 package com.switchfully.eurder.security;
 
 
+import com.switchfully.eurder.customer.domain.Customer;
 import com.switchfully.eurder.security.exception.UnauthorizatedException;
 import com.switchfully.eurder.security.exception.UnknownUserException;
 import com.switchfully.eurder.security.exception.WrongPasswordException;
@@ -42,6 +43,10 @@ public class SecurityService {
         String username = decodedUsernameAndPassword.substring(0, decodedUsernameAndPassword.indexOf(":"));
         String password = decodedUsernameAndPassword.substring(decodedUsernameAndPassword.indexOf(":") + 1);
         return new UsernamePassword(username, password);
+    }
+
+    public void newLogin(Customer customer){
+        userRepository.addNewCustomer(customer);
     }
 
 }

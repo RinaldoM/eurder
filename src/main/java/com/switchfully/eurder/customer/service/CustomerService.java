@@ -5,6 +5,7 @@ import com.switchfully.eurder.customer.api.dto.CustomerDto;
 import com.switchfully.eurder.customer.domain.Customer;
 import com.switchfully.eurder.customer.domain.CustomerRepository;
 import com.switchfully.eurder.customer.exception.*;
+import com.switchfully.eurder.security.SecurityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,12 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final SecurityService securityService;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, SecurityService securityService) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
+        this.securityService = securityService;
     }
 
     public CustomerDto createNewCustomer(CreateCustomerDto createCustomerDto) {
@@ -35,6 +38,7 @@ public class CustomerService {
         }
         Customer customer = customerMapper.toCustomer(createCustomerDto);
         customerRepository.save(customer);
+        securityService.newLogin(customer);
         return customerMapper.toCustomerDto(customer);
     }
 

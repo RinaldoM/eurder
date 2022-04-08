@@ -7,6 +7,7 @@ import com.switchfully.eurder.item.api.dto.CreateItemDto;
 import com.switchfully.eurder.item.api.dto.ItemDto;
 import com.switchfully.eurder.item.domain.Item;
 import com.switchfully.eurder.item.service.ItemMapper;
+import com.switchfully.eurder.security.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.assertj.core.api.Assertions;
@@ -25,15 +26,21 @@ class ItemControllerTest {
 
     @Autowired
     private ItemMapper itemMapper;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void givenNewItem_WhenRegisterItem_ThenReturnNewItem() {
         //  GIVEN
         CreateItemDto newItem = new CreateItemDto("iPhone 12", "Not the newest iPhone", 700, 2);
-
+        Customer slash = new Customer("Slash", "No Idea", "slash@gnr.com", "089386666", "Garden of Eden");
+        userRepository.addNewAdmin(slash);
         //  WHEN
         ItemDto actualItemDto = RestAssured
                 .given()
+                .auth()
+                .preemptive()
+                .basic("Slash", "pwd")
                 .port(port)
                 .body(newItem)
                 .contentType(ContentType.JSON)
@@ -61,9 +68,14 @@ class ItemControllerTest {
     void givenItemEmptyName_WhenAddedNewItem_ThenReturnErrorMessage() {
         //  GIVEN
         CreateItemDto newItem = new CreateItemDto("", "Not the newest iPhone", 700, 2);
+        Customer slash = new Customer("Slash", "No Idea", "slash@gnr.com", "089386666", "Garden of Eden");
+        userRepository.addNewAdmin(slash);
         //  WHEN
         RestAssured
                 .given()
+                .auth()
+                .preemptive()
+                .basic("Slash", "pwd")
                 .port(port)
                 .body(newItem)
                 .contentType(ContentType.JSON)
@@ -79,9 +91,14 @@ class ItemControllerTest {
     void givenItemEmptyDescription_WhenAddedNewItem_ThenReturnErrorMessage() {
         //  GIVEN
         CreateItemDto newItem = new CreateItemDto("iPhone12", "", 700, 2);
+        Customer slash = new Customer("Slash", "No Idea", "slash@gnr.com", "089386666", "Garden of Eden");
+        userRepository.addNewAdmin(slash);
         //  WHEN
         RestAssured
                 .given()
+                .auth()
+                .preemptive()
+                .basic("Slash", "pwd")
                 .port(port)
                 .body(newItem)
                 .contentType(ContentType.JSON)
@@ -97,9 +114,14 @@ class ItemControllerTest {
     void givenItemInvalidPrice_WhenAddedNewItem_ThenReturnErrorMessage() {
         //  GIVEN
         CreateItemDto newItem = new CreateItemDto("iPhone12", "Not the newest iPhone",-7, 2);
+        Customer slash = new Customer("Slash", "No Idea", "slash@gnr.com", "089386666", "Garden of Eden");
+        userRepository.addNewAdmin(slash);
         //  WHEN
         RestAssured
                 .given()
+                .auth()
+                .preemptive()
+                .basic("Slash", "pwd")
                 .port(port)
                 .body(newItem)
                 .contentType(ContentType.JSON)
@@ -115,9 +137,14 @@ class ItemControllerTest {
     void givenItemInvalidAmount_WhenAddedNewItem_ThenReturnErrorMessage() {
         //  GIVEN
         CreateItemDto newItem = new CreateItemDto("iPhone12", "Not the newest iPhone", 700, -7);
+        Customer slash = new Customer("Slash", "No Idea", "slash@gnr.com", "089386666", "Garden of Eden");
+        userRepository.addNewAdmin(slash);
         //  WHEN
         RestAssured
                 .given()
+                .auth()
+                .preemptive()
+                .basic("Slash", "pwd")
                 .port(port)
                 .body(newItem)
                 .contentType(ContentType.JSON)
