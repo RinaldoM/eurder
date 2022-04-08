@@ -6,7 +6,6 @@ import com.switchfully.eurder.item.service.ItemService;
 import com.switchfully.eurder.order.domain.GroupItem;
 import com.switchfully.eurder.order.domain.Order;
 import com.switchfully.eurder.order.domain.OrderRepository;
-import com.switchfully.eurder.order.exception.CustomerNotFoundException;
 import com.switchfully.eurder.order.exception.EmptyInputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
