@@ -66,7 +66,6 @@ class OrderControllerTest {
                     new CreateGroupItemDto(fruitItems.get(1).getItemId(), 20)
             );
             CreateOrderDto createOrderDTO = new CreateOrderDto(newCustomer.getCustomerId(),groupItems);
-            Order expectedOrder = orderService.saveNewOrder(createOrderDTO);
 
             //  WHEN
             Order actualOrder = RestAssured
@@ -87,7 +86,7 @@ class OrderControllerTest {
                     .as(Order.class);
 
             //  THEN
-
+            Order expectedOrder = orderService.saveNewOrder(createOrderDTO);
             Assertions.assertThat(expectedOrder.getCustomerId()).isEqualTo(actualOrder.getCustomerId());
             Assertions.assertThat(expectedOrder.getTotalPrice()).isEqualTo(actualOrder.getTotalPrice());
             Assertions.assertThat(expectedOrder.getItemGroup()).hasSameElementsAs(actualOrder.getItemGroup());

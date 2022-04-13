@@ -2,6 +2,7 @@ package com.switchfully.eurder.item.api;
 
 import com.switchfully.eurder.item.api.dto.CreateItemDto;
 import com.switchfully.eurder.item.api.dto.ItemDto;
+import com.switchfully.eurder.item.api.dto.UpdateItemDto;
 import com.switchfully.eurder.item.service.ItemService;
 import com.switchfully.eurder.security.SecurityService;
 import org.springframework.http.HttpStatus;
@@ -25,5 +26,10 @@ public class ItemController {
     public ItemDto createNewItem(@RequestBody CreateItemDto createItemDto, @RequestHeader String authorization){
         securityService.validateAuthorization(authorization, ADD_ITEM);
         return itemService.saveNewItem(createItemDto);
+    }
+    @PutMapping(path="{itemId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ItemDto updateItem(@RequestBody UpdateItemDto updateItemDto, @PathVariable  String itemId){
+        return itemService.updateItem(itemId, updateItemDto);
     }
 }

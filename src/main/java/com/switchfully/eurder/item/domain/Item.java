@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public class Item {
     private final String itemId;
-    private final String name;
-    private final String description;
-    private final double price;
+    private String name;
+    private String description;
+    private double price;
     private int amount;
 
     public Item(String name, String description, double price, int amount) {
@@ -42,6 +42,7 @@ public class Item {
         this.amount -= amount;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,5 +54,21 @@ public class Item {
     @Override
     public int hashCode() {
         return Objects.hash(name, description, price, amount);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

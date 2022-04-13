@@ -2,6 +2,7 @@ package com.switchfully.eurder.item.service;
 
 import com.switchfully.eurder.item.api.dto.CreateItemDto;
 import com.switchfully.eurder.item.api.dto.ItemDto;
+import com.switchfully.eurder.item.api.dto.UpdateItemDto;
 import com.switchfully.eurder.item.domain.Item;
 import com.switchfully.eurder.item.domain.ItemRepository;
 import com.switchfully.eurder.item.exceptions.EmptyInputException;
@@ -54,5 +55,18 @@ public class ItemService {
     public void removeFromStock(Item itemToUpdate, int amount){
         Item item = itemRepository.findById(itemToUpdate.getItemId());
         item.removeFromStock(amount);
+    }
+
+    public ItemDto updateItem(String itemId, UpdateItemDto updateItemDto) {
+        Item item = itemRepository.findById(itemId);
+        loggingErrorEmptyInput(updateItemDto.getName(), "name");
+        loggingErrorEmptyInput(updateItemDto.getDescription(), "description");
+        loggingErrorInvalidInput(updateItemDto.getAmount(), "amount");
+        loggingErrorInvalidInput(updateItemDto.getPrice(), "price");
+        item.setName(updateItemDto.getName());
+        item.setDescription(updateItemDto.getDescription());
+        item.setAmount(updateItemDto.getAmount());
+        item.setPrice(updateItemDto.getPrice());
+        return itemMapper.toDto(item);
     }
 }
