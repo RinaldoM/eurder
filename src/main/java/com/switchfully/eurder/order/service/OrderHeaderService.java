@@ -3,9 +3,8 @@ package com.switchfully.eurder.order.service;
 import com.switchfully.eurder.customer.domain.Customer;
 import com.switchfully.eurder.customer.service.CustomerService;
 import com.switchfully.eurder.order.api.dto.CreateOrderHeaderDto;
-import com.switchfully.eurder.order.api.dto.OrderHeaderDto;
 import com.switchfully.eurder.order.domain.OrderHeader;
-import com.switchfully.eurder.order.domain.OrderReportDto;
+import com.switchfully.eurder.order.domain.OrderReport;
 import com.switchfully.eurder.order.domain.OrderHeaderRepository;
 import com.switchfully.eurder.order.exception.EmptyInputException;
 import com.switchfully.eurder.order.exception.OrderHeaderNotFoundException;
@@ -57,8 +56,8 @@ public class OrderHeaderService {
         throw new OrderHeaderNotFoundException(id);
     }
 
-    public OrderReportDto getOrderReport(Long customerId) {
-       return new OrderReportDto();
+    public OrderReport getOrderReport(Long customerId) {
+       return null;
     }
 
 

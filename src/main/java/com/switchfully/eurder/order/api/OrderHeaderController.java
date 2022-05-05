@@ -3,7 +3,7 @@ package com.switchfully.eurder.order.api;
 
 import com.switchfully.eurder.order.api.dto.CreateOrderHeaderDto;
 import com.switchfully.eurder.order.api.dto.OrderHeaderDto;
-import com.switchfully.eurder.order.domain.OrderReportDto;
+import com.switchfully.eurder.order.domain.OrderReport;
 import com.switchfully.eurder.order.service.OrderHeaderMapper;
 import com.switchfully.eurder.order.service.OrderHeaderService;
 import com.switchfully.eurder.security.SecurityService;
@@ -37,7 +37,7 @@ public class OrderHeaderController {
 
     @GetMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public OrderReportDto getOrderReport(@RequestParam(name = "customer") Long customerId, @RequestHeader String authorization) {
+    public OrderReport getOrderReport(@RequestParam(name = "customer") Long customerId, @RequestHeader String authorization) {
         securityService.validateAuthorization(authorization, VIEW_REPORT_OF_CUSTOMER);
         return orderService.getOrderReport(customerId);
     }

@@ -5,6 +5,7 @@ import com.switchfully.eurder.customer.service.CustomerService;
 import com.switchfully.eurder.item.domain.ItemRepository;
 import com.switchfully.eurder.order.api.dto.CreateOrderDetailDto;
 import com.switchfully.eurder.order.api.dto.CreateOrderHeaderDto;
+import com.switchfully.eurder.order.api.dto.OrderHeaderDto;
 import com.switchfully.eurder.order.domain.OrderHeader;
 import com.switchfully.eurder.order.domain.OrderHeaderRepository;
 import com.switchfully.eurder.order.service.OrderDetailService;
@@ -56,7 +57,7 @@ class OrderHeaderControllerTest {
             CreateOrderHeaderDto createOrderDTO = new CreateOrderHeaderDto(1L);
 
             //  WHEN
-            OrderHeader actualOrder = RestAssured
+            OrderHeaderDto actualOrder = RestAssured
                     .given()
                     .auth()
                     .preemptive()
@@ -71,11 +72,12 @@ class OrderHeaderControllerTest {
                     .assertThat()
                     .statusCode(HttpStatus.CREATED.value())
                     .extract()
-                    .as(OrderHeader.class);
+                    .as(OrderHeaderDto.class);
 
             //  THEN
-            Assertions.assertThat(actualOrder.getCustomer().getFirstName()).isEqualTo("Rinaldo");
+            Assertions.assertThat(actualOrder.getCustomerId()).isEqualTo("Rinaldo");
         }
+
         @Test
         void givenOrderWithNonExistingCustomer_WhenRegisterOrder_ThenReturnBadRequest() {
             //  GIVEN
