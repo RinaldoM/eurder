@@ -1,9 +1,9 @@
 package com.switchfully.eurder.order.service;
 
 import com.switchfully.eurder.customer.domain.Customer;
-import com.switchfully.eurder.customer.exception.CustomerNotFoundException;
 import com.switchfully.eurder.customer.service.CustomerService;
 import com.switchfully.eurder.order.api.dto.CreateOrderHeaderDto;
+import com.switchfully.eurder.order.api.dto.OrderHeaderDto;
 import com.switchfully.eurder.order.domain.OrderHeader;
 import com.switchfully.eurder.order.domain.OrderReportDto;
 import com.switchfully.eurder.order.domain.OrderHeaderRepository;
@@ -13,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class OrderHeaderService {
     private final Logger serviceLogger = LoggerFactory.getLogger(OrderHeaderService.class);
@@ -23,11 +21,13 @@ public class OrderHeaderService {
 
 
     private final CustomerService customerService;
+    private final OrderHeaderMapper orderHeaderMapper;
 
-    public OrderHeaderService(OrderHeaderRepository orderRepository, CustomerService customerService) {
+    public OrderHeaderService(OrderHeaderRepository orderRepository, CustomerService customerService, OrderHeaderMapper orderHeaderMapper) {
         this.orderRepository = orderRepository;
 
         this.customerService = customerService;
+        this.orderHeaderMapper = orderHeaderMapper;
     }
 
     public OrderHeader saveNewOrder(CreateOrderHeaderDto createOrderDTO) {
@@ -38,6 +38,7 @@ public class OrderHeaderService {
         order.setCustomer(customer);
         orderRepository.save(order);
         serviceLogger.info("New order created.");
+
         return order;
     }
 
