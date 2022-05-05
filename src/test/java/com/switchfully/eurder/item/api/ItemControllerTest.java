@@ -65,7 +65,7 @@ class ItemControllerTest {
             Item item = itemMapper.toItem(newItem);
             //  THEN
             ItemDto expectedDto = itemMapper.toDto(item);
-            Assertions.assertThat(actualItemDto.getItemId()).isNotEmpty();
+            Assertions.assertThat(actualItemDto.getItemId()).isNotNull();
             Assertions.assertThat(actualItemDto.getName()).isEqualTo(expectedDto.getName());
             Assertions.assertThat(actualItemDto.getDescription()).isEqualTo(expectedDto.getDescription());
             Assertions.assertThat(actualItemDto.getPrice()).isEqualTo(expectedDto.getPrice());
@@ -251,7 +251,7 @@ class ItemControllerTest {
                     .contentType(ContentType.JSON)
                     .when()
                     .accept(ContentType.JSON)
-                    .put("/items/1")
+                    .put("/items/3")
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value())

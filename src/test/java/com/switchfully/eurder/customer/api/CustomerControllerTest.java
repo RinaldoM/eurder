@@ -62,7 +62,7 @@ class CustomerControllerTest {
             //  THEN
 
             CustomerDto expectedCustomerDto = customerMapper.toCustomerDto(customer);
-            Assertions.assertThat(actualCustomerDto.getCustomerId()).isNotBlank();
+            Assertions.assertThat(actualCustomerDto.getCustomerId()).isNotNull();
             Assertions.assertThat(actualCustomerDto.getFirstName()).isEqualTo(expectedCustomerDto.getFirstName());
             Assertions.assertThat(actualCustomerDto.getLastName()).isEqualTo(expectedCustomerDto.getLastName());
             Assertions.assertThat(actualCustomerDto.getEmail()).isEqualTo(expectedCustomerDto.getEmail());
@@ -218,22 +218,16 @@ class CustomerControllerTest {
     class ShowCustomerTest {
         @Test
         void whenAllCustomersAsked_showAllCustomers() {
-            //  GIVEN
-            List<Customer> customerList = List.of(
-                    new Customer("Jimi", "Hendrix", "jimi.hendrix@voodoochild.com", "089386446", "Heaven"),
-                    new Customer("Jimmy", "Page", "jimmy.page@stairwaytoheaven.cm", "089386446", "Still on earth")
-            );
-            customerList.forEach(customer -> customerRepository.save(customer));
-            userRepository.addNewAdmin(customerList.get(0));
+
 
             //  WHEN
             CustomerDto[] actualList = RestAssured
                     .given()
                     .auth()
                     .preemptive()
-                    .basic("Jimi", "pwd")
+                    .basic("Admin", "pwd")
                     .port(port)
-                    .body(customerList)
+
                     .contentType(ContentType.JSON)
                     .when()
                     .accept(ContentType.JSON)
@@ -243,10 +237,9 @@ class CustomerControllerTest {
                     .statusCode(HttpStatus.OK.value())
                     .extract()
                     .as(CustomerDto[].class);
-            List<CustomerDto> expectedList = customerMapper.toCustomerDto(customerList);
             //  THEN
 
-            Assertions.assertThat(actualList).hasSameElementsAs(expectedList);
+            Assertions.assertThat(actualList.length).isEqualTo(1);
         }
 
 
@@ -300,13 +293,14 @@ class CustomerControllerTest {
                     .contentType(ContentType.JSON)
                     .when()
                     .accept(ContentType.JSON)
-                    .get("/customers/1")
+                    .get("/customers/3")
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .extract()
                     .response();
         }
+
         @Test
         void givenNonAuthorizedUser_whenOneCustomerAsked_showErrorMessage() {
             //  GIVEN

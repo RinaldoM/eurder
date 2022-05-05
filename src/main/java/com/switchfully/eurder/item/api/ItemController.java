@@ -29,7 +29,7 @@ public class ItemController {
     }
     @PutMapping(path="{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto updateItem(@RequestBody UpdateItemDto updateItemDto, @PathVariable  String itemId){
+    public ItemDto updateItem(@RequestBody UpdateItemDto updateItemDto, @PathVariable  Long itemId){
         return itemService.updateItem(itemId, updateItemDto);
     }
 }

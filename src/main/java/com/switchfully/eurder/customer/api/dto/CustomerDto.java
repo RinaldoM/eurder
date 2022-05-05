@@ -3,14 +3,14 @@ package com.switchfully.eurder.customer.api.dto;
 import java.util.Objects;
 
 public class CustomerDto {
-    private final String customerId;
+    private final Long customerId;
     private final String firstName;
     private final String lastName;
     private final String email;
     private final String phoneNumber;
     private final String address;
 
-    public CustomerDto(String customerId, String firstName, String lastName, String email, String phoneNumber, String address) {
+    public CustomerDto(Long customerId, String firstName, String lastName, String email, String phoneNumber, String address) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -19,7 +19,7 @@ public class CustomerDto {
         this.address = address;
     }
 
-    public String getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 

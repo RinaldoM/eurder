@@ -30,6 +30,7 @@ public class CustomerController {
         securityService.validateAuthorization(authorization, CREATE_CUSTOMER);
         return customerService.createNewCustomer(createCustomerDto);
     }
+
     @GetMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<CustomerDto> getAllCustomers(@RequestHeader String authorization){
@@ -38,9 +39,9 @@ public class CustomerController {
     }
     @GetMapping(path="{customerId}",consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDto getAllCustomers(@PathVariable String customerId, @RequestHeader String authorization){
+    public CustomerDto getAllCustomers(@PathVariable Long customerId, @RequestHeader String authorization){
         securityService.validateAuthorization(authorization, VIEW_ONE_CUSTOMER);
-        return customerService.getCustomerById(customerId);
+        return customerService.getCustomerDtoById(customerId);
     }
 
 

@@ -1,13 +1,13 @@
 package com.switchfully.eurder.item.api.dto;
 
 public class ItemDto {
-    private final String itemId;
+    private final Long itemId;
     private final String name;
     private final String description;
     private final double price;
     private final int amount;
 
-    public ItemDto(String itemId, String name, String description, double price, int amount) {
+    public ItemDto(Long itemId, String name, String description, double price, int amount) {
         this.itemId = itemId;
         this.name = name;
         this.description = description;
@@ -15,7 +15,7 @@ public class ItemDto {
         this.amount = amount;
     }
 
-    public String getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 

@@ -7,6 +7,7 @@ import com.switchfully.eurder.item.domain.Item;
 import com.switchfully.eurder.item.domain.ItemRepository;
 import com.switchfully.eurder.item.exceptions.EmptyInputException;
 import com.switchfully.eurder.item.exceptions.InvalidNumberInputException;
+import com.switchfully.eurder.item.exceptions.ItemNotFoundException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -48,17 +49,23 @@ public class ItemService {
         }
     }
 
-    public Item findItemById(String itemId){
-        return itemRepository.findById(itemId);
+    public Item findItemById(Long itemId){
+        if(itemRepository.existsByItemId(itemId)){
+            return itemRepository.findById(itemId).get();
+        }else{
+            serviceLogger.error("Item with id " + itemId+ " does not exist!");
+
+            throw new ItemNotFoundException(itemId);
+        }
     }
 
     public void removeFromStock(Item itemToUpdate, int amount){
-        Item item = itemRepository.findById(itemToUpdate.getItemId());
+        Item item = findItemById(itemToUpdate.getItemId());
         item.removeFromStock(amount);
     }
 
-    public ItemDto updateItem(String itemId, UpdateItemDto updateItemDto) {
-        Item item = itemRepository.findById(itemId);
+    public ItemDto updateItem(Long itemId, UpdateItemDto updateItemDto) {
+        Item item = findItemById(itemId);
         loggingErrorEmptyInput(updateItemDto.getName(), "name");
         loggingErrorEmptyInput(updateItemDto.getDescription(), "description");
         loggingErrorInvalidInput(updateItemDto.getAmount(), "amount");

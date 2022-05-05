@@ -1,18 +1,31 @@
 package com.switchfully.eurder.customer.domain;
 
+import org.checkerframework.checker.units.qual.C;
+
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
+
+@Entity
+@Table(name = "CUSTOMER")
 public class Customer {
-    private final String customerId;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
-    private final String phoneNumber;
-    private final String address;
+    @Id
+    @SequenceGenerator(name = "customer_seq", sequenceName = "customer_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_seq")
+    private Long customerId;
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+    @Column(name = "LAST_NAME")
+    private String lastName;
+    @Column(name = "EMAIL")
+    private String email;
+    @Column(name = "PHONENUMBER")
+    private String phoneNumber;
+    @Column(name = "ADDRESS")
+    private String address;
 
     public Customer(String firstName, String lastName, String email, String phoneNumber, String address) {
-        this.customerId = UUID.randomUUID().toString();
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -20,7 +33,10 @@ public class Customer {
         this.address = address;
     }
 
-    public String getCustomerId() {
+    public Customer() {
+    }
+
+    public Long getCustomerId() {
         return customerId;
     }
 
@@ -42,10 +58,6 @@ public class Customer {
 
     public String getAddress() {
         return address;
-    }
-
-    public String fullName(){
-        return firstName + " " +lastName;
     }
 
     @Override
